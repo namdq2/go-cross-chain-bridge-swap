@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - CHAIN1_RPC=${CHAIN1_RPC}
+      - CHAIN2_RPC=${CHAIN2_RPC}
+      - BRIDGE_ADDR1=${BRIDGE_ADDR1}
+      - BRIDGE_ADDR2=${BRIDGE_ADDR2}
+      - HOT_WALLET_PRIVATE_KEYS=${HOT_WALLET_PRIVATE_KEYS}
+      - DATABASE_URL=postgresql://bridge:bridge@postgres:5432/bridge_db
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=bridge
+      - POSTGRES_PASSWORD=bridge
+      - POSTGRES_DB=bridge_db
+    depends_on:
+      - postgres
+    entrypoint: ["./wait-for-postgres.sh", "postgres:5432", "--", "./bridge-app"]
+    restart: unless-stopped
+    networks:
+      - bridge-network
+
+  postgres:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=bridge
+      - POSTGRES_PASSWORD=bridge
+      - POSTGRES_DB=bridge_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bridge"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - bridge-network
+
+volumes:
+  postgres_data:
+
+networks:
+  bridge-network:
+    driver: bridge
