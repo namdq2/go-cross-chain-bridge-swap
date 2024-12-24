@@ -61,7 +61,7 @@ A high-performance bridge application for swapping tokens between Ethereum and B
 1. Clone the repository:
 ```bash
 git clone https://github.com/namdq2/go-cross-chain-bridge-swap.git
-cd bridge-swap
+cd go-cross-chain-bridge-swap
 ```
 
 2. Copy and configure environment variables:
@@ -286,11 +286,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, email support@yourdomain.com or create an issue in the GitHub repository.
+For support, email namquoc.dev@gmail.com or create an issue in the GitHub repository.
 
 ## Authors
 
-- Your Name (your@email.com)
+- Nam Dang (namquoc.dev@gmail.com)
 
 ## Acknowledgments
 
